@@ -1,13 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InfoUIController : MonoBehaviour
 {
-    public Text infoText;        // Reference to the UI Text component.
+    [SerializeField] private TextMeshPro infoText; // Reference to the UI Text component.
     public float displayTime = 3f; // Time to display the text before it disappears.
 
+    private void Awake()
+    {
+        if (infoText == null)
+        {
+            infoText = GetComponent<TextMeshPro>(); // Auto-find TextMeshPro if not assigned
+        }
+    }
     public void ShowInfo(string message)
     {
         infoText.text = message;

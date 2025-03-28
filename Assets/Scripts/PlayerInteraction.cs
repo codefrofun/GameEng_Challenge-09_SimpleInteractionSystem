@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     public float interactionRange = 2f;  // Range in which the player can interact with an object
-    private InteractableObject currentInteractable = null;
+    public InteractableObject currentInteractable { get; set; } // made public
 
     private void Update()
     {

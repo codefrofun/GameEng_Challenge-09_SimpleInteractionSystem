@@ -1,15 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 
 public enum InteractableType
 {
     Hint,
     Info,
-    Pickup
+    Pickup,
+    Dialogue
 }
 
 public class InteractableObject : MonoBehaviour
@@ -20,7 +19,11 @@ public class InteractableObject : MonoBehaviour
     public GameObject itemToPickup;
 
     public InfoUIController infoUIController;  // Reference to the InfoUIController script
-    public Text interactionTextUI;  // Reference to the Text UI component
+    public TextMeshPro interactionText3D;  // Reference to the Text UI component
+
+    public DialogueManagerScript dialogueManager;
+
+    public string[] dialogueLines; // Lines can be written in the inspector.
 
     public void Interact()
     {
@@ -41,20 +44,65 @@ public class InteractableObject : MonoBehaviour
 
             case InteractableType.Pickup:
                 // Handle pickup interaction (Item will get destroyed)
-                ShowInteractionText("Picked up: " + interactionText);
+                ShowInteractionText("You got: " + interactionText);
                 if (itemToPickup != null)
                 {
                     Destroy(itemToPickup); // Remove the object from the scene
                 }
+                break;
+
+            case InteractableType.Dialogue:
+                // Handle dialogue interaction
+                TriggerDialogue();
                 break;
         }
     }
 
     private void ShowInteractionText(string message)
     {
-        if (interactionTextUI != null)
+        if (interactionText3D != null)
         {
-            interactionTextUI.text = message;  // Set the text of the UI Text component
+            interactionText3D.gameObject.SetActive(false);  // Hide any previous text
+            interactionText3D.text = message;
+            interactionText3D.gameObject.SetActive(true);  // Show the new text
+
+            StartCoroutine(HideTextAfterDelay());
+        }
+    }
+
+    private void TriggerDialogue()
+    {
+
+        if (dialogueLines.Length > 0 && dialogueManager != null)
+        {
+            dialogueManager.DialogueUI(dialogueLines);  // Start the dialogue in the DialogueManager
+        }
+        else
+        {
+            Debug.LogWarning("Dialogue lines are empty or DialogueManager is not assigned!");
+        }
+
+
+        /* string[] dialogueLines = new string[]
+        {
+            "Good day, wanderer.",
+            "This house does not have room for the both of us.",
+            "Find all 3 keys and leave."
+        };
+
+        if (dialogueManager != null)
+        {
+            dialogueManager.DialogueUI(dialogueLines);  // Start the dialogue in the DialogueManager
+        } */
+    }
+
+    private System.Collections.IEnumerator HideTextAfterDelay()
+    {
+        Debug.Log("Coroutine started: Hiding text in 3 seconds");
+        yield return new WaitForSeconds(2.6f); // Adjust the duration if needed (between 2-3 is good!!)
+        if (interactionText3D != null)
+        {
+            interactionText3D.gameObject.SetActive(false); // Hide the text
         }
     }
 }

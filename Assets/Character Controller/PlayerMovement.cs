@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
 
+    public bool PlayerMove { get; set; } = true;
+
     public float moveSpeed = 2.0f;
     public Rigidbody2D playerRigidbody; // Reference to the CharacterController component for movement control
     private Vector2 moveVector;
@@ -35,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     // Method to update the movement direction based on the input from InputManager
     private void UpdateMoveVector(Vector2 InputVector)
     {
+        if (!PlayerMove) return;
+
         lastDirection = moveVector;
 
         moveVector = InputVector;
@@ -64,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
 
     void HandlePlayerMovement(Vector2 moveVector)
     {
+        if (!PlayerMove) return;
+
         // Move the character based on the input direction and moveSpeed
         playerRigidbody.MovePosition(playerRigidbody.position + moveVector * moveSpeed * Time.fixedDeltaTime);
     }
