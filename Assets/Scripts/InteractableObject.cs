@@ -43,11 +43,15 @@ public class InteractableObject : MonoBehaviour
 
 
             case InteractableType.Pickup:
-                // Handle pickup interaction (Item will get destroyed)
-                ShowInteractionText("You got: " + interactionText);
+                // Handle pickup interaction (Show message and hide item)
+                if (infoUIController != null)
+                {
+                    infoUIController.ShowInfo("You got: " + interactionText); // Ensure UI handles the text visibility
+                }
+
                 if (itemToPickup != null)
                 {
-                    Destroy(itemToPickup); // Remove the object from the scene
+                    itemToPickup.SetActive(false); // Hide the item instead of destroying it
                 }
                 break;
 
